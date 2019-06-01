@@ -1,20 +1,16 @@
 import { Component, AfterViewInit, HostBinding } from '@angular/core';
 import 'ol/ol.css';
 import Map from 'ol/Map';
-import View from 'ol/View';
-import TileLayer from 'ol/layer/Tile';
-import { fromLonLat, toLonLat } from 'ol/proj';
-import OSM from 'ol/source/OSM';
-import GeoJSON from 'ol/format/GeoJSON';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import { MapStyle } from './map.styles';
-import Select from 'ol/interaction/Select';
-import MouseWheelZoom from 'ol/interaction/MouseWheelZoom';
+import { MapDefaults } from './map.defaults';
+import Select, { SelectEvent, SelectEventType } from 'ol/interaction/Select';
 import ScaleLine from 'ol/control/ScaleLine';
 import { JordbruksblockService } from '../jordbruksblock.service';
 import { Jordbruksblock } from '../models/jordbruksblock.model';
-import {getArea, getLength} from 'ol/sphere.js';
+import { getArea, getLength } from 'ol/sphere.js';
+import { getCenter } from 'ol/extent';
+import { Feature, MapBrowserEvent } from 'ol';
 
 @Component({
     selector: 'app-map',
@@ -26,67 +22,86 @@ export class MapComponent implements AfterViewInit {
 
     constructor(private jordbruksblockService: JordbruksblockService) { }
 
-    blocks: any;
-    // blocks: Jordbruksblock[];
-    //   selectedBlock: any;
+    selectedBlock: Jordbruksblock = {
+        BLOCKID: '',
+        REGION: '',
+        AGOSLAG: '',
+        AREAL: 0,
+        KATEGORI: '',
+        geometry: {}
+    };
+
+    selectedFeature: Feature;
+
+    mapDefaults = new MapDefaults();
+
+    selectInteraction = new Select(
+        { style: this.mapDefaults.selectedStyle }
+    );
 
     map = new Map({
-        interactions: [
-            new MouseWheelZoom(),
-        ]
+        view: this.mapDefaults.mapView,
+        controls: [new ScaleLine()],
     });
+
+    geojsonData = {
+        type: 'FeatureCollection',
+        features: {}
+    };
 
     visingsoData = new VectorSource({});
 
-    osmTileLayer = new TileLayer({
-        preload: 4,
-        opacity: .5,
-        source: new OSM()
-    });
-
-    geojsonFormat = new GeoJSON({ featureProjection: 'EPSG:3857' });
-
-    mapStyle = new MapStyle();
-
-    selectInteraction = new Select(
-        { style: this.mapStyle.selectedStyle }
-    );
+    // @ts-ignore
+    // fakeSelectEvent = new SelectEvent({
+    //     selected: [],
+    //     deselected: this.selectedBlock,
+    // });
 
     stylefunction = (feature: any) => {
         if (feature.get('AGOSLAG') === undefined) {
-            return this.mapStyle.annatStyle;
+            return this.mapDefaults.annatStyle;
         }
-        return feature.get('AGOSLAG').toUpperCase() === 'AKER' ? this.mapStyle.farmStyle : this.mapStyle.annatStyle;
+        return feature.get('AGOSLAG').toUpperCase() === 'AKER' ? this.mapDefaults.farmStyle : this.mapDefaults.annatStyle;
     }
 
-    // get selectedBlock(): Jordbruksblock {
-    //     return this.jordbruksblockService.selectedBlock;
-    // }
-    //   set selectedBlock(block) {
-    //       this.jordbruksblockService.selectedBlock = block;
-    //   }
-
-    select(block) {
-        console.log(block.BLOCKID);
-
-        // this.map.addInteraction(this.selectInteraction);
-
+    displaySelected(block) {
+        this.selectInteraction.set('features', []);
+        console.log(this.selectInteraction.getProperties());
+        console.log(this.selectedFeature);
+        if (this.selectedFeature) {
+            this.selectedFeature.setStyle(this.stylefunction);
+        }
         this.visingsoData.forEachFeature((feature) => {
-            if (feature.get('BLOCKID') === block.blockid) {
-                feature.setStyle(this.mapStyle.selectedStyle);
+            if (feature.get('BLOCKID') === block.BLOCKID) {
+                feature.setStyle(this.mapDefaults.selectedStyle);
+
+                const ext = feature.getGeometry().getExtent();
+                const center = getCenter(ext);
+                this.mapDefaults.mapView.setCenter(center);
+                this.mapDefaults.mapView.setZoom(13);
+                this.selectedBlock = block;
+                // this.map.dispatchEvent({type: 'select', selected: feature, deselected: this.selectedBlock});
+                // feature.dispatchEvent({type: 'select', target: Select, selected: feature, deselected: this.selectedBlock});
+                // console.log(feature);
+                this.selectedFeature = feature;
             }
         });
     }
 
-    identify(): void {
-        console.log('identify called');
+    addSelectInteraction(): void {
         this.map.addInteraction(this.selectInteraction);
-        this.selectInteraction.on('select', () => {
-            // @ts-ignore
-            const selectedBlock: Jordbruksblock = this.selectInteraction.getFeatures().item(0).getProperties();
-            console.log(selectedBlock);
-            console.log(getArea(this.selectInteraction.getFeatures().item(0).getGeometry()) / 10000);
-            this.jordbruksblockService.selectedBlock = selectedBlock;
+        this.selectInteraction.on('select', (evt) => {
+            const block = evt.selected[0].getProperties();
+            console.log(evt.selected[0]);
+            console.log(evt);
+            this.selectedBlock = {
+                BLOCKID: block.BLOCKID,
+                REGION: block.REGION,
+                AGOSLAG: block.AGOSLAG,
+                AREAL: block.AREAL,
+                KATEGORI: block.KATEGORI,
+                geometry: block.geometry
+            };
         });
     }
 
@@ -94,27 +109,17 @@ export class MapComponent implements AfterViewInit {
 
         this.jordbruksblockService.getBlocks()
             .subscribe((data) => {
-                console.log('data back getBlocks');
-                const newblocks = {
-                    type: 'FeatureCollection',
-                    features: data
-                };
-                this.visingsoData.addFeatures(this.geojsonFormat.readFeatures(newblocks));
+                this.geojsonData.features = data;
+                this.visingsoData.addFeatures(this.mapDefaults.geojsonFormat.readFeatures(this.geojsonData));
 
                 const visingsoLayer = new VectorLayer({
                     source: this.visingsoData,
                     style: this.stylefunction
                 });
-                this.map.setTarget('map');
-                this.map.addLayer(this.osmTileLayer);
+                this.map.addLayer(this.mapDefaults.osmTileLayer);
                 this.map.addLayer(visingsoLayer);
-                this.map.setView(new View({
-                    center: fromLonLat([14.342308044433596, 58.05081693924278]),
-                    zoom: 12
-                }));
-                // this.identify();
-                this.map.addControl(new ScaleLine());
-                // this.map.removeInteraction(new Point);
+                this.map.setTarget('map');
+                this.addSelectInteraction();
             });
 
     }

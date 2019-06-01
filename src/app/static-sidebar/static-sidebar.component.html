@@ -2,19 +2,19 @@
 
 <div class="example-container">
     <mat-form-field>
-        <input matInput [(ngModel)]="jordbruksblock.BLOCKID" placeholder="Block Id" (keyup.enter)="searchBlock(jordbruksblock.BLOCKID)">
+        <input matInput [(ngModel)]="selectedBlock.BLOCKID" placeholder="Block Id" (keyup.enter)="searchBlock(selectedBlock.BLOCKID)">
     </mat-form-field>
 
-    <mat-form-field *ngIf="jordbruksblock.AGOSLAG !==''">
-        <input matInput [(ngModel)]="jordbruksblock.AGOSLAG" placeholder="Agoslag">
+    <mat-form-field *ngIf="selectedBlock.AGOSLAG !==''">
+        <input matInput [(ngModel)]="selectedBlock.AGOSLAG" placeholder="Agoslag">
     </mat-form-field>
 
-    <mat-form-field *ngIf="jordbruksblock.AREAL !== 0">
-        <input matInput [(ngModel)]="jordbruksblock.AREAL" placeholder="Areal">
+    <mat-form-field *ngIf="selectedBlock.AREAL !== 0">
+        <input matInput [(ngModel)]="selectedBlock.AREAL" placeholder="Areal">
     </mat-form-field>
 
-    <mat-form-field *ngIf="jordbruksblock.KATEGORI !== ''">
-        <input matInput [(ngModel)]="jordbruksblock.KATEGORI" placeholder="Kategori">
+    <mat-form-field *ngIf="selectedBlock.KATEGORI !== ''">
+        <input matInput [(ngModel)]="selectedBlock.KATEGORI" placeholder="Kategori">
     </mat-form-field>
 </div>
 

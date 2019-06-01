@@ -1,6 +1,27 @@
 import { Style, Fill, Stroke } from 'ol/style';
+import GeoJSON from 'ol/format/GeoJSON';
+import TileLayer from 'ol/layer/Tile';
+import OSM from 'ol/source/OSM';
+import { View } from 'ol';
+import { fromLonLat } from 'ol/proj';
 
-export class MapStyle {
+
+export class MapDefaults {
+
+    geojsonFormat = new GeoJSON({ featureProjection: 'EPSG:3857' });
+
+    osmTileLayer = new TileLayer({
+        preload: 4,
+        opacity: .5,
+        source: new OSM()
+    });
+
+    mapView = new View({
+        center: fromLonLat([14.342308044433596, 58.05081693924278]),
+        zoom: 12
+    });
+
+    // STYLES
 
     whiteStroke = new Stroke({
         color: 'white'
@@ -10,8 +31,8 @@ export class MapStyle {
         color: 'blue'
     });
 
-    whiteFill = new Fill({
-        color: 'black'
+    purpleFill = new Fill({
+        color: 'purple'
     });
 
     pinkFill = new Fill({
@@ -33,7 +54,7 @@ export class MapStyle {
     });
 
     selectedStyle = new Style({
-        fill: this.whiteFill,
+        fill: this.purpleFill,
         stroke: this.blueStroke
     });
 }
