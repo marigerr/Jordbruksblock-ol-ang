@@ -1,0 +1,13 @@
+.flex {
+    display: flex;
+    height: 100%;
+}
+
+app-map {
+    width: 75%;
+    height: 100%;
+}
+
+app-static-sidebar {
+    margin: 1rem;
+}
