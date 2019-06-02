@@ -10,7 +10,8 @@ import { JordbruksblockService } from '../jordbruksblock.service';
 import { Jordbruksblock } from '../models/jordbruksblock.model';
 import { getArea, getLength } from 'ol/sphere.js';
 import { getCenter } from 'ol/extent';
-import { Feature, MapBrowserEvent } from 'ol';
+import { Feature, MapBrowserEvent, Collection } from 'ol';
+import Modify from 'ol/interaction/Modify';
 
 @Component({
     selector: 'app-map',
@@ -23,15 +24,16 @@ export class MapComponent implements AfterViewInit {
     constructor(private jordbruksblockService: JordbruksblockService) { }
 
     selectedBlock: Jordbruksblock = {
-        BLOCKID: '',
-        REGION: '',
-        AGOSLAG: '',
-        AREAL: 0,
-        KATEGORI: '',
+            BLOCKID: '',
+            REGION: '',
+            AGOSLAG: '',
+            AREAL: 0,
+            KATEGORI: '',
         geometry: {}
     };
 
     selectedFeature: Feature;
+    featureCollection = new Collection([]);
 
     mapDefaults = new MapDefaults();
 
@@ -64,7 +66,7 @@ export class MapComponent implements AfterViewInit {
         return feature.get('AGOSLAG').toUpperCase() === 'AKER' ? this.mapDefaults.farmStyle : this.mapDefaults.annatStyle;
     }
 
-    displaySelected(block) {
+    displaySelected(block: Jordbruksblock) {
         this.selectInteraction.set('features', []);
         console.log(this.selectInteraction.getProperties());
         console.log(this.selectedFeature);
@@ -92,8 +94,7 @@ export class MapComponent implements AfterViewInit {
         this.map.addInteraction(this.selectInteraction);
         this.selectInteraction.on('select', (evt) => {
             const block = evt.selected[0].getProperties();
-            console.log(evt.selected[0]);
-            console.log(evt);
+            this.selectedFeature = evt.selected[0];
             this.selectedBlock = {
                 BLOCKID: block.BLOCKID,
                 REGION: block.REGION,
@@ -103,6 +104,28 @@ export class MapComponent implements AfterViewInit {
                 geometry: block.geometry
             };
         });
+    }
+
+    addEditInteraction(editing: boolean) {
+        const modifyInteraction = new Modify({
+            features: new Collection([this.selectedFeature])
+        });
+        if (editing) {
+            // add modify interaction on selected feature
+            this.map.addInteraction(modifyInteraction);
+        } else {
+            // remove modify interaction - need better solution
+            this.map.getInteractions().pop();
+            // remove selected feature highlighing
+            this.selectInteraction.getFeatures().getArray().pop();
+            // clear modified data
+            this.visingsoData.clear();
+            // remove and readd select interaction
+            this.map.removeInteraction(this.selectInteraction);
+            // refresh data
+            this.visingsoData.addFeatures(this.mapDefaults.geojsonFormat.readFeatures(this.geojsonData));
+            this.addSelectInteraction();
+        }
     }
 
     ngAfterViewInit() {

@@ -2,20 +2,33 @@
 
 <div class="example-container">
     <mat-form-field>
-        <input matInput [(ngModel)]="selectedBlock.BLOCKID" placeholder="Block Id" (keyup.enter)="searchBlock(selectedBlock.BLOCKID)">
+        <input matInput readonly='{{blockIdIsReadOnly}}' [(ngModel)]="selectedBlock.BLOCKID" placeholder="Sök med Block Id" (keyup.enter)="searchBlock(selectedBlock.BLOCKID)">
+        <mat-hint *ngIf="selectedBlock.AGOSLAG ===''">Eller klicka på kartan</mat-hint>
     </mat-form-field>
 
     <mat-form-field *ngIf="selectedBlock.AGOSLAG !==''">
-        <input matInput [(ngModel)]="selectedBlock.AGOSLAG" placeholder="Agoslag">
+        <input matInput readonly='{{inputsReadOnly}}' [(ngModel)]="selectedBlock.AGOSLAG" placeholder="Agoslag">
+        <!-- <input matInput readonly value={{selectedBlock.AGOSLAG}} placeholder="Agoslag"> -->
     </mat-form-field>
 
     <mat-form-field *ngIf="selectedBlock.AREAL !== 0">
-        <input matInput [(ngModel)]="selectedBlock.AREAL" placeholder="Areal">
+        <input matInput readonly [(ngModel)]="selectedBlock.AREAL" placeholder="Areal">
     </mat-form-field>
 
     <mat-form-field *ngIf="selectedBlock.KATEGORI !== ''">
-        <input matInput [(ngModel)]="selectedBlock.KATEGORI" placeholder="Kategori">
+        <input matInput readonly='{{inputsReadOnly}}' [(ngModel)]="selectedBlock.KATEGORI" placeholder="Kategori">
     </mat-form-field>
+    <div *ngIf="selectedBlock.AGOSLAG ==='' && notEditing">
+        <button  mat-raised-button color="primary" (click)=submit(selectedBlock.BLOCKID)>Submit</button>
+    </div>
+    <div class="flex" *ngIf="selectedBlock.AGOSLAG !=='' && notEditing">
+        <button  mat-raised-button color="primary" (click)=edit()>Edit</button>
+        <button  mat-raised-button color="accent" (click)=newSearch()>New Search</button>
+    </div>
+    <div class="flex" *ngIf="!notEditing">
+        <button mat-raised-button color="warn" (click)=cancel()>Cancel</button>
+        <button mat-raised-button color="primary" (click)=save()>Save</button>
+    </div>
 </div>
 
 <!-- <button mat-raised-button (click)=edit()>Edit</button> -->

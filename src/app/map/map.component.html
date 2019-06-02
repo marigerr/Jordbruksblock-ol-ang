@@ -1,6 +1,9 @@
 <div class="flex">
     <div id="map"></div>
-    <app-static-sidebar [selectedBlock]='selectedBlock' (blockidChange)='displaySelected($event)'></app-static-sidebar>
+    <app-static-sidebar 
+    [selectedBlock]='selectedBlock' 
+    (blockidChange)='displaySelected($event)' 
+    (editFeature)='addEditInteraction($event)'></app-static-sidebar>
 </div>
 
 

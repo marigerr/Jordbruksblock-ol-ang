@@ -5,7 +5,6 @@ import OSM from 'ol/source/OSM';
 import { View } from 'ol';
 import { fromLonLat } from 'ol/proj';
 
-
 export class MapDefaults {
 
     geojsonFormat = new GeoJSON({ featureProjection: 'EPSG:3857' });
@@ -57,4 +56,6 @@ export class MapDefaults {
         fill: this.purpleFill,
         stroke: this.blueStroke
     });
+
+
 }
