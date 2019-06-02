@@ -68,8 +68,8 @@ export class MapComponent implements AfterViewInit {
 
     displaySelected(block: Jordbruksblock) {
         this.selectInteraction.set('features', []);
-        console.log(this.selectInteraction.getProperties());
-        console.log(this.selectedFeature);
+        // console.log(this.selectInteraction.getProperties());
+        // console.log(this.selectedFeature);
         if (this.selectedFeature) {
             this.selectedFeature.setStyle(this.stylefunction);
         }
@@ -132,6 +132,7 @@ export class MapComponent implements AfterViewInit {
 
         this.jordbruksblockService.getBlocks()
             .subscribe((data) => {
+                // console.log(data);
                 this.geojsonData.features = data;
                 this.visingsoData.addFeatures(this.mapDefaults.geojsonFormat.readFeatures(this.geojsonData));
 

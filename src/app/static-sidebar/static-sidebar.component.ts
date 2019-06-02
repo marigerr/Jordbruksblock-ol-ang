@@ -8,7 +8,6 @@ import { JordbruksblockService } from '../jordbruksblock.service';
   styleUrls: ['./static-sidebar.component.css']
 })
 export class StaticSidebarComponent implements OnChanges {
-  // 64414159295
 
   constructor(private jordbruksblockService: JordbruksblockService) { }
 
@@ -32,23 +31,24 @@ export class StaticSidebarComponent implements OnChanges {
   }
 
   submit(blockid) {
-    this.searchBlock(blockid)
+    this.searchBlock(blockid);
   }
 
   searchBlock(blockid: string) {
-    this.jordbruksblockService.getBlock(blockid).subscribe((data) => {
-      console.log(data[0]);
+    this.jordbruksblockService.getBlock(blockid).subscribe((data: any) => {
+      console.log(data);
       this.selectedBlock = {
-        BLOCKID: data[0].properties.BLOCKID,
-        REGION: data[0].properties.REGION,
-        AGOSLAG: data[0].properties.AGOSLAG,
-        AREAL: data[0].properties.AREAL,
-        KATEGORI: data[0].properties.KATEGORI,
-        geometry: data[0].properties.geometry
+        BLOCKID: data.properties.BLOCKID,
+        REGION: data.properties.REGION,
+        AGOSLAG: data.properties.AGOSLAG,
+        AREAL: data.properties.AREAL,
+        KATEGORI: data.properties.KATEGORI,
+        geometry: data.geometry
       };
       // this.selectedBlock.geometry = data[0].properties.geometry
       this.blockidChange.emit(this.selectedBlock);
       this.blockIdIsReadOnly = true;
+      console.log(this.selectedBlock);
     });
   }
 

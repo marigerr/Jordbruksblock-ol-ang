@@ -17,7 +17,8 @@ export class JordbruksblockService {
   };
 
   constructor(private httpClient: HttpClient) {
-    this.baseURL = 'http://localhost:3000/features';
+    // this.baseURL = 'http://localhost:3000/features';
+    this.baseURL = 'https://rectangular-water.glitch.me/api.blocks';
   }
 
   getBlocks() {
@@ -25,16 +26,32 @@ export class JordbruksblockService {
   }
 
   getBlock(blockid: string) {
-    return this.httpClient.get(this.baseURL + '?properties.BLOCKID=' + blockid);
+    console.log(blockid);
+    return this.httpClient.get(this.baseURL + '/' + blockid);
   }
 
   saveBlock(block: Jordbruksblock) {
+    console.log(block);
     console.log('saveBlock called');
-    // @ts-ignore
-    block.geometry = {type: 'MultiPolygon', coordinates: [block.geometry.flatCoordinates]};
-    console.log((block));
+    const geoJsonBlock = {
+      properties: {
+        BLOCKID: block.BLOCKID,
+        REGION: block.REGION,
+        AGOSLAG: block.AGOSLAG,
+        AREAL: block.AREAL,
+        KATEGORI: block.KATEGORI
+      },
+      geometry: {
+        type: 'MultiPolygon',
+        // @ts-ignore
+        coordinates: [[block.geometry.flatCoordinates]]
+      }
+    }
+    // block.geometry = {type: 'MultiPolygon', coordinates: [[block.geometry.flatCoordinates]]};
+    console.log((geoJsonBlock));
 
-    this.httpClient.put(this.baseURL + '/' + block.BLOCKID, block, this.httpOptions).subscribe((data) => {
+    this.httpClient.put(this.baseURL, geoJsonBlock, this.httpOptions).subscribe((data) => {
+    // this.httpClient.put(this.baseURL + '/' + block.BLOCKID, block, this.httpOptions).subscribe((data) => {
       console.log('success');
       console.log(data);
     }, error => console.log(error));
