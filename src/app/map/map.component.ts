@@ -24,12 +24,18 @@ export class MapComponent implements AfterViewInit {
     constructor(private jordbruksblockService: JordbruksblockService) { }
 
     selectedBlock: Jordbruksblock = {
+        type: '',
+        properties: {
             BLOCKID: '',
             REGION: '',
             AGOSLAG: '',
             AREAL: 0,
-            KATEGORI: '',
-        geometry: {}
+            KATEGORI: ''
+        },
+        geometry: {
+            type: '',
+            coordinates: []
+        }
     };
 
     selectedFeature: Feature;
@@ -53,11 +59,6 @@ export class MapComponent implements AfterViewInit {
 
     visingsoData = new VectorSource({});
 
-    // @ts-ignore
-    // fakeSelectEvent = new SelectEvent({
-    //     selected: [],
-    //     deselected: this.selectedBlock,
-    // });
 
     stylefunction = (feature: any) => {
         if (feature.get('AGOSLAG') === undefined) {
@@ -68,13 +69,11 @@ export class MapComponent implements AfterViewInit {
 
     displaySelected(block: Jordbruksblock) {
         this.selectInteraction.set('features', []);
-        // console.log(this.selectInteraction.getProperties());
-        // console.log(this.selectedFeature);
         if (this.selectedFeature) {
             this.selectedFeature.setStyle(this.stylefunction);
         }
         this.visingsoData.forEachFeature((feature) => {
-            if (feature.get('BLOCKID') === block.BLOCKID) {
+            if (feature.get('BLOCKID') === block.properties.BLOCKID) {
                 feature.setStyle(this.mapDefaults.selectedStyle);
 
                 const ext = feature.getGeometry().getExtent();
@@ -82,9 +81,6 @@ export class MapComponent implements AfterViewInit {
                 this.mapDefaults.mapView.setCenter(center);
                 this.mapDefaults.mapView.setZoom(13);
                 this.selectedBlock = block;
-                // this.map.dispatchEvent({type: 'select', selected: feature, deselected: this.selectedBlock});
-                // feature.dispatchEvent({type: 'select', target: Select, selected: feature, deselected: this.selectedBlock});
-                // console.log(feature);
                 this.selectedFeature = feature;
             }
         });
@@ -93,16 +89,11 @@ export class MapComponent implements AfterViewInit {
     addSelectInteraction(): void {
         this.map.addInteraction(this.selectInteraction);
         this.selectInteraction.on('select', (evt) => {
-            const block = evt.selected[0].getProperties();
-            this.selectedFeature = evt.selected[0];
-            this.selectedBlock = {
-                BLOCKID: block.BLOCKID,
-                REGION: block.REGION,
-                AGOSLAG: block.AGOSLAG,
-                AREAL: block.AREAL,
-                KATEGORI: block.KATEGORI,
-                geometry: block.geometry
-            };
+            if (evt.selected[0]) {
+                // @ts-ignore
+                this.selectedBlock = this.mapDefaults.geojsonFormat.writeFeatureObject(evt.selected[0]);
+                this.selectedFeature = evt.selected[0];
+            }
         });
     }
 
@@ -113,6 +104,11 @@ export class MapComponent implements AfterViewInit {
         if (editing) {
             // add modify interaction on selected feature
             this.map.addInteraction(modifyInteraction);
+            modifyInteraction.on('modifyend', (evt) => {
+                // @ts-ignore
+                this.selectedBlock = this.mapDefaults.geojsonFormat.writeFeatureObject(evt.features.getArray()[0]);
+                this.selectedFeature = evt.features.getArray()[0];
+            });
         } else {
             // remove modify interaction - need better solution
             this.map.getInteractions().pop();
@@ -132,7 +128,6 @@ export class MapComponent implements AfterViewInit {
 
         this.jordbruksblockService.getBlocks()
             .subscribe((data) => {
-                // console.log(data);
                 this.geojsonData.features = data;
                 this.visingsoData.addFeatures(this.mapDefaults.geojsonFormat.readFeatures(this.geojsonData));
 

@@ -2,26 +2,26 @@
 
 <div class="example-container">
     <mat-form-field>
-        <input matInput readonly='{{blockIdIsReadOnly}}' [(ngModel)]="selectedBlock.BLOCKID" placeholder="Sök med Block Id" (keyup.enter)="searchBlock(selectedBlock.BLOCKID)">
-        <mat-hint *ngIf="selectedBlock.AGOSLAG ===''">Eller klicka på kartan</mat-hint>
+        <input matInput readonly='{{blockIdIsReadOnly}}' [(ngModel)]="selectedBlock.properties.BLOCKID" placeholder="Sök med Block Id" (keyup.enter)="searchBlock(selectedBlock.properties.BLOCKID)">
+        <mat-hint *ngIf="selectedBlock.properties.AGOSLAG ===''">Eller klicka på kartan</mat-hint>
     </mat-form-field>
 
-    <mat-form-field *ngIf="selectedBlock.AGOSLAG !==''">
-        <input matInput readonly='{{inputsReadOnly}}' [(ngModel)]="selectedBlock.AGOSLAG" placeholder="Agoslag">
-        <!-- <input matInput readonly value={{selectedBlock.AGOSLAG}} placeholder="Agoslag"> -->
+    <mat-form-field *ngIf="selectedBlock.properties.AGOSLAG !==''">
+        <input matInput readonly='{{inputsReadOnly}}' [(ngModel)]="selectedBlock.properties.AGOSLAG" placeholder="Agoslag">
+        <!-- <input matInput readonly value={{selectedBlock.properties.AGOSLAG}} placeholder="Agoslag"> -->
     </mat-form-field>
 
-    <mat-form-field *ngIf="selectedBlock.AREAL !== 0">
-        <input matInput readonly [(ngModel)]="selectedBlock.AREAL" placeholder="Areal">
+    <mat-form-field *ngIf="selectedBlock.properties.AREAL !== 0">
+        <input matInput readonly [(ngModel)]="selectedBlock.properties.AREAL" placeholder="Areal">
     </mat-form-field>
 
-    <mat-form-field *ngIf="selectedBlock.KATEGORI !== ''">
-        <input matInput readonly='{{inputsReadOnly}}' [(ngModel)]="selectedBlock.KATEGORI" placeholder="Kategori">
+    <mat-form-field *ngIf="selectedBlock.properties.KATEGORI !== ''">
+        <input matInput readonly='{{inputsReadOnly}}' [(ngModel)]="selectedBlock.properties.KATEGORI" placeholder="Kategori">
     </mat-form-field>
-    <div *ngIf="selectedBlock.AGOSLAG ==='' && notEditing">
-        <button  mat-raised-button color="primary" (click)=submit(selectedBlock.BLOCKID)>Submit</button>
+    <div *ngIf="selectedBlock.properties.AGOSLAG ==='' && notEditing">
+        <button  mat-raised-button color="primary" (click)=submit(selectedBlock.properties.BLOCKID)>Submit</button>
     </div>
-    <div class="flex" *ngIf="selectedBlock.AGOSLAG !=='' && notEditing">
+    <div class="flex" *ngIf="selectedBlock.properties.AGOSLAG !=='' && notEditing">
         <button  mat-raised-button color="primary" (click)=edit()>Edit</button>
         <button  mat-raised-button color="accent" (click)=newSearch()>New Search</button>
     </div>

@@ -10,6 +10,7 @@ import {MatSliderModule} from '@angular/material/slider';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 import { AppComponent } from './app.component';
 import { MapComponent } from './map/map.component';
@@ -32,7 +33,8 @@ import { JordbruksblockService } from './jordbruksblock.service';
     MatExpansionModule,
     MatFormFieldModule,
     MatInputModule,
-    FormsModule
+    FormsModule,
+    MatSnackBarModule
   ],
   providers: [JordbruksblockService],
   bootstrap: [AppComponent]
