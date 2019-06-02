@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "lint": "ng lint",
-    "pushToGhPages": "git subtree push --prefix dist origin gh-pages"
+    "pushToGhPages": "git subtree push --prefix dist/ol-ang origin gh-pages"
   },
   "private": true,
   "dependencies": {
