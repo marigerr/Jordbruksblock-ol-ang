@@ -29,7 +29,6 @@ export class MapComponent implements AfterViewInit {
     baseMapControls = this.mapDefaults.baseMapControls;
     currentBaseMap: BaseMapControl = { value: 'osmTileLayer', viewValue: 'Gata', opacity: 1 };
     blockOpacity = .4;
-
     selectedBlock: Jordbruksblock = makeEmptyBlock();
     selectedFeature: Feature;
     featureCollection = new Collection([]);
@@ -95,12 +94,16 @@ export class MapComponent implements AfterViewInit {
             features: new Collection([this.selectedFeature])
         });
         if (editing) {
-            // add modify interaction on selected feature
             this.map.addInteraction(modifyInteraction);
             modifyInteraction.on('modifyend', (evt) => {
+                const modifiedBlock = evt.features.getArray()[0];
+                let newAreaInHektar = getArea(modifiedBlock.getGeometry()) / 10000;
+                const decimalPlaceFactor =  Math.pow( 10, ( 10 ) );
+                newAreaInHektar = Math.round(newAreaInHektar * decimalPlaceFactor) / decimalPlaceFactor;
+                modifiedBlock.setProperties({AREAL: newAreaInHektar});
                 // @ts-ignore
-                this.selectedBlock = this.mapDefaults.geojsonFormat.writeFeatureObject(evt.features.getArray()[0]);
-                this.selectedFeature = evt.features.getArray()[0];
+                this.selectedBlock = this.mapDefaults.geojsonFormat.writeFeatureObject(modifiedBlock);
+                this.selectedFeature = modifiedBlock;
             });
         } else {
             // remove modify interaction
