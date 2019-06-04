@@ -24,6 +24,7 @@ export class MapComponent implements AfterViewInit {
 
     constructor(private jordbruksblockService: JordbruksblockService) { }
 
+    dataAndTilesLoaded = false;
     mapDefaults = new MapDefaults();
     baseMapControls = this.mapDefaults.baseMapControls;
     currentBaseMap: BaseMapControl = { value: 'osmTileLayer', viewValue: 'Gata', opacity: 1 };
@@ -162,6 +163,9 @@ export class MapComponent implements AfterViewInit {
                 this.currentBaseMap = { value: 'osmTileLayer', viewValue: 'Gata', opacity: 1 };
                 this.map.addLayer(this.visingsoLayer);
                 this.map.setTarget('map');
+                this.map.on('rendercomplete', () => {
+                    this.dataAndTilesLoaded = true;
+                });
                 this.addSelectInteraction();
             });
     }

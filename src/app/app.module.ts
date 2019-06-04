@@ -7,7 +7,6 @@ import { FormsModule } from '@angular/forms';
 
 import {MatButtonModule} from '@angular/material';
 import {MatSliderModule} from '@angular/material/slider';
-import {MatExpansionModule} from '@angular/material/expansion';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -35,12 +34,11 @@ import { LoadingScreenComponent } from './component/loading-screen/loading-scree
     LayoutModule,
     MatButtonModule,
     MatSliderModule,
-    MatExpansionModule,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
     MatSnackBarModule,
-    MatSelectModule
+    MatSelectModule,
   ],
   providers: [JordbruksblockService],
   bootstrap: [AppComponent]

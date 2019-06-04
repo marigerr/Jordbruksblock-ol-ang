@@ -1,3 +1,5 @@
+<app-loading-screen *ngIf="!dataAndTilesLoaded"></app-loading-screen>
+
 <div class="flex">
     <div id="map"></div>
     <app-static-sidebar 
@@ -6,7 +8,7 @@
         (reloadData)='reloadData($event)'
         (editFeature)='addEditInteraction($event)'></app-static-sidebar>
 </div>
-<app-controls 
+<app-controls
     (updateBasemapOpacity)='updateBasemapOpacity($event)'
     (updateBlockOpacity)='updateBlockOpacity($event)'
     (changeBaseMap)='changeBaseMap($event)'

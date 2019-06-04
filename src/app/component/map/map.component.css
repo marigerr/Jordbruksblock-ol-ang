@@ -11,3 +11,11 @@
 app-static-sidebar {
   margin: 1rem;
 }
+
+app-loading-screen {
+  z-index: 2000;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background: rgb(127, 206, 127);
+}
