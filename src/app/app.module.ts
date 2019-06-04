@@ -14,17 +14,19 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatSelectModule} from '@angular/material/select';
 
 import { AppComponent } from './app.component';
-import { MapComponent } from './map/map.component';
-import { StaticSidebarComponent } from './static-sidebar/static-sidebar.component';
+import { MapComponent } from './component/map/map.component';
+import { StaticSidebarComponent } from './component/static-sidebar/static-sidebar.component';
 import { JordbruksblockService } from './jordbruksblock.service';
-import { ControlsComponent } from './controls/controls.component';
+import { ControlsComponent } from './component/controls/controls.component';
+import { LoadingScreenComponent } from './component/loading-screen/loading-screen.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
     StaticSidebarComponent,
-    ControlsComponent
+    ControlsComponent,
+    LoadingScreenComponent
   ],
   imports: [
     BrowserModule,

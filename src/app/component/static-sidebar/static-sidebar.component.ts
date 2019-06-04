@@ -1,6 +1,6 @@
 import { Component, Input, EventEmitter, Output, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
-import { Jordbruksblock, makeEmptyBlock } from '../models/jordbruksblock.model';
-import { JordbruksblockService } from '../jordbruksblock.service';
+import { Jordbruksblock, makeEmptyBlock } from '../../models/jordbruksblock.model';
+import { JordbruksblockService } from '../../jordbruksblock.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
