@@ -12,3 +12,22 @@ export class Jordbruksblock {
         coordinates: []
     };
 }
+
+const emptyBlock: Jordbruksblock = {
+    type: '',
+    properties: {
+        BLOCKID: '',
+        REGION: '',
+        AGOSLAG: '',
+        AREAL: 0,
+        KATEGORI: ''
+    },
+    geometry: {
+        type: '',
+        coordinates: []
+    }
+};
+
+export function makeEmptyBlock() {
+    return Object.assign ( {}, emptyBlock )
+}

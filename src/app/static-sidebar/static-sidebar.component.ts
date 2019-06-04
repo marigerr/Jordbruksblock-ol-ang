@@ -1,5 +1,5 @@
 import { Component, Input, EventEmitter, Output, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
-import { Jordbruksblock } from '../models/jordbruksblock.model';
+import { Jordbruksblock, makeEmptyBlock } from '../models/jordbruksblock.model';
 import { JordbruksblockService } from '../jordbruksblock.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -27,7 +27,7 @@ export class StaticSidebarComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     const changed: SimpleChange = changes.selectedBlock;
-    if (changed.currentValue.properties.BLOCKID !== '') {
+    if (changed.currentValue && changed.currentValue.properties.BLOCKID !== '') {
       this.blockIdIsReadOnly = true;
     }
   }
@@ -38,7 +38,6 @@ export class StaticSidebarComponent implements OnChanges {
 
   searchBlock(blockid: string) {
     this.jordbruksblockService.getBlock(blockid).subscribe((data: any) => {
-      console.log(data);
       this.selectedBlock.properties = {
         BLOCKID: data.properties.BLOCKID,
         REGION: data.properties.REGION,
@@ -59,17 +58,7 @@ export class StaticSidebarComponent implements OnChanges {
   }
 
   newSearch() {
-    this.selectedBlock.properties = {
-      BLOCKID: '',
-      REGION: '',
-      AGOSLAG: '',
-      AREAL: 0,
-      KATEGORI: '',
-    };
-    this.selectedBlock.geometry = {
-      type: '',
-      coordinates: []
-    };
+    this.selectedBlock = makeEmptyBlock();
     this.editFeature.emit(false);
     this.blockIdIsReadOnly = false;
   }
@@ -89,17 +78,7 @@ export class StaticSidebarComponent implements OnChanges {
   cancel() {
     this.notEditing = true;
     this.editFeature.emit(false);
-    this.selectedBlock.properties = {
-      BLOCKID: '',
-      REGION: '',
-      AGOSLAG: '',
-      AREAL: 0,
-      KATEGORI: '',
-    };
-    this.selectedBlock.geometry = {
-      type: '',
-      coordinates: []
-    };
+    this.selectedBlock = makeEmptyBlock();
     this.blockIdIsReadOnly = false;
     this.inputsReadOnly = true;
   }

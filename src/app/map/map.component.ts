@@ -7,7 +7,7 @@ import { MapDefaults } from './map.defaults';
 import Select, { SelectEvent, SelectEventType } from 'ol/interaction/Select';
 import ScaleLine from 'ol/control/ScaleLine';
 import { JordbruksblockService } from '../jordbruksblock.service';
-import { Jordbruksblock } from '../models/jordbruksblock.model';
+import { Jordbruksblock, makeEmptyBlock } from '../models/jordbruksblock.model';
 import { getArea, getLength } from 'ol/sphere.js';
 import { getCenter } from 'ol/extent';
 import { Feature, MapBrowserEvent, Collection } from 'ol';
@@ -29,21 +29,7 @@ export class MapComponent implements AfterViewInit {
     currentBaseMap: BaseMapControl = { value: 'osmTileLayer', viewValue: 'Gata', opacity: 1 };
     blockOpacity = .4;
 
-    selectedBlock: Jordbruksblock = {
-        type: '',
-        properties: {
-            BLOCKID: '',
-            REGION: '',
-            AGOSLAG: '',
-            AREAL: 0,
-            KATEGORI: ''
-        },
-        geometry: {
-            type: '',
-            coordinates: []
-        }
-    };
-
+    selectedBlock: Jordbruksblock = makeEmptyBlock();
     selectedFeature: Feature;
     featureCollection = new Collection([]);
 

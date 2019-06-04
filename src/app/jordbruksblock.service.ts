@@ -26,7 +26,6 @@ export class JordbruksblockService {
   }
 
   getBlock(blockid: string) {
-    console.log(blockid);
     return this.httpClient.get(this.baseURL + '/' + blockid);
   }
 

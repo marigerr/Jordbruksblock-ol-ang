@@ -6,9 +6,6 @@
 .blockform-container {
   display: flex;
   flex-direction: column;
-}
-
-.blockform-container>* {
   width: 100%;
 }
 

@@ -25,7 +25,6 @@ export class ControlsComponent implements OnInit {
   changeBaseMap: EventEmitter<string> = new EventEmitter();
 
   ngOnInit() {
-    console.log(this.blockOpacity);
   }
 
   baseMapOpacityChange() {
