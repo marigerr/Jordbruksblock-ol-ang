@@ -1,18 +1,14 @@
 <div class="flex">
     <div id="map"></div>
     <app-static-sidebar 
-    [selectedBlock]='selectedBlock' 
-    (blockidChange)='displaySelected($event)' 
-    (editFeature)='addEditInteraction($event)'></app-static-sidebar>
+        [selectedBlock]='selectedBlock' 
+        (blockidChange)='displaySelected($event)'
+        (editFeature)='addEditInteraction($event)'></app-static-sidebar>
 </div>
-
-
-
-
-<!-- <app-static-sidebar [mapcomp]="mapcomp"></app-static-sidebar> -->
-
-<!-- <div id="popup" class="ol-popup">
-    <a href="#" id="popup-closer" class="ol-popup-closer" ></a>
-    <div id="popup-content"></div>
-    <button id="editPrpBtn" mat-raised-button (click)=editProp($event)>Edit Prop</button>
-</div> -->
+<app-controls 
+    (updateBasemapOpacity)='updateBasemapOpacity($event)'
+    (updateBlockOpacity)='updateBlockOpacity($event)'
+    (changeBaseMap)='changeBaseMap($event)'
+    [baseMapControls]= 'baseMapControls'
+    [currentBaseMap]= 'currentBaseMap'
+    [blockOpacity]= 'blockOpacity'></app-controls>

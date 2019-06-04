@@ -1,0 +1,17 @@
+<div class="layerSettingDiv">
+    <mat-form-field>
+        <mat-label>Baskarta</mat-label>
+        <mat-select [(value)]="currentBaseMap.value" [(ngModel)]="currentBaseMap.value" (selectionChange)=selChange()>
+            <mat-option *ngFor="let tileOption of baseMapControls" [value]="tileOption.value">
+                {{tileOption.viewValue}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div class="opacitySliders">
+    <p>Baskarta Transparens: <span>{{baseSlider.value}}</span></p>
+    <mat-slider #baseSlider [(value)]="currentBaseMap.opacity" [(ngModel)]="currentBaseMap.opacity" (change)=baseMapOpacityChange() min="0" max="1" step="0.1" tickInterval="auto">
+    </mat-slider>
+    <p>Block Transparens: <span>{{blockOpacity}}</span></p>
+    <mat-slider #blockSlider [(value)]="blockOpacity" [(ngModel)]="blockOpacity" (change)=blockOpChange() min="0" max="1" step="0.1"></mat-slider>
+</div>s

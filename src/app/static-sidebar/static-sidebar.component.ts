@@ -1,7 +1,7 @@
 import { Component, Input, EventEmitter, Output, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
 import { Jordbruksblock } from '../models/jordbruksblock.model';
 import { JordbruksblockService } from '../jordbruksblock.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-static-sidebar',
@@ -12,17 +12,16 @@ export class StaticSidebarComponent implements OnChanges {
 
   constructor(private jordbruksblockService: JordbruksblockService, private snackBar: MatSnackBar) { }
 
-  blockIdIsReadOnly = false;
-  inputsReadOnly = true;
-  notEditing = true;
-
   @Input()
   selectedBlock: Jordbruksblock;
-
   @Output()
   blockidChange: EventEmitter<Jordbruksblock> = new EventEmitter();
   @Output()
   editFeature: EventEmitter<boolean> = new EventEmitter();
+
+  blockIdIsReadOnly = false;
+  inputsReadOnly = true;
+  notEditing = true;
 
   ngOnChanges(changes: SimpleChanges) {
     const changed: SimpleChange = changes.selectedBlock;
@@ -31,7 +30,7 @@ export class StaticSidebarComponent implements OnChanges {
     }
   }
 
-  submit(blockid) {
+  search(blockid) {
     this.searchBlock(blockid);
   }
 
@@ -75,13 +74,13 @@ export class StaticSidebarComponent implements OnChanges {
 
   save() {
     this.jordbruksblockService.saveBlock(this.selectedBlock).subscribe((data: any) => {
-        this.snackBar.open('Block Saved', 'Close', {
-          duration: 2000,
-        });
-        this.blockIdIsReadOnly = true;
-        this.inputsReadOnly = true;
-        this.notEditing = true;
-        this.editFeature.emit(false);
+      this.snackBar.open('Block Saved', 'Close', {
+        duration: 2000,
+      });
+      this.blockIdIsReadOnly = true;
+      this.inputsReadOnly = true;
+      this.notEditing = true;
+      this.editFeature.emit(false);
     });
   }
 

@@ -11,17 +11,20 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatSelectModule} from '@angular/material/select';
 
 import { AppComponent } from './app.component';
 import { MapComponent } from './map/map.component';
 import { StaticSidebarComponent } from './static-sidebar/static-sidebar.component';
 import { JordbruksblockService } from './jordbruksblock.service';
+import { ControlsComponent } from './controls/controls.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
-    StaticSidebarComponent
+    StaticSidebarComponent,
+    ControlsComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +37,8 @@ import { JordbruksblockService } from './jordbruksblock.service';
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatSelectModule
   ],
   providers: [JordbruksblockService],
   bootstrap: [AppComponent]

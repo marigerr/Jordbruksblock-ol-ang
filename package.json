@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod --base-href https://marigerr.github.io/Jordbruksblock-ol-ang/",
     "lint": "ng lint",
     "pushToGhPages": "git subtree push --prefix dist/ol-ang origin gh-pages"
   },

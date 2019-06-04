@@ -12,6 +12,7 @@ import { getArea, getLength } from 'ol/sphere.js';
 import { getCenter } from 'ol/extent';
 import { Feature, MapBrowserEvent, Collection } from 'ol';
 import Modify from 'ol/interaction/Modify';
+import { BaseMapControl } from './map.defaults';
 
 @Component({
     selector: 'app-map',
@@ -22,6 +23,11 @@ import Modify from 'ol/interaction/Modify';
 export class MapComponent implements AfterViewInit {
 
     constructor(private jordbruksblockService: JordbruksblockService) { }
+
+    mapDefaults = new MapDefaults();
+    baseMapControls = this.mapDefaults.baseMapControls;
+    currentBaseMap: BaseMapControl = { value: 'osmTileLayer', viewValue: 'Gata', opacity: 1 };
+    blockOpacity = .4;
 
     selectedBlock: Jordbruksblock = {
         type: '',
@@ -41,8 +47,6 @@ export class MapComponent implements AfterViewInit {
     selectedFeature: Feature;
     featureCollection = new Collection([]);
 
-    mapDefaults = new MapDefaults();
-
     selectInteraction = new Select(
         { style: this.mapDefaults.selectedStyle }
     );
@@ -58,7 +62,9 @@ export class MapComponent implements AfterViewInit {
     };
 
     visingsoData = new VectorSource({});
-
+    visingsoLayer = new VectorLayer({
+        opacity: this.blockOpacity
+    });
 
     stylefunction = (feature: any) => {
         if (feature.get('AGOSLAG') === undefined) {
@@ -124,22 +130,39 @@ export class MapComponent implements AfterViewInit {
         }
     }
 
-    ngAfterViewInit() {
+    updateBasemapOpacity(baseMapControl: BaseMapControl) {
+        this.mapDefaults.bingTileLayer.setOpacity(baseMapControl.opacity);
+        this.mapDefaults.osmTileLayer.setOpacity(baseMapControl.opacity);
+        this.mapDefaults.mapboxTileLayer.setOpacity(baseMapControl.opacity);
+    }
 
+    updateBlockOpacity(opacity: number) {
+        this.visingsoLayer.setOpacity(opacity);
+    }
+
+    changeBaseMap(selectedTileLayer) {
+        let tempArray = [...this.mapDefaults.baseMapLayers];
+        tempArray = tempArray.filter((el) => {
+            return el !== selectedTileLayer;
+        })
+        this.mapDefaults[selectedTileLayer].setVisible(true);
+        tempArray.forEach((el) => this.mapDefaults[el].setVisible(false));
+    }
+
+    ngAfterViewInit() {
         this.jordbruksblockService.getBlocks()
             .subscribe((data) => {
                 this.geojsonData.features = data;
                 this.visingsoData.addFeatures(this.mapDefaults.geojsonFormat.readFeatures(this.geojsonData));
-
-                const visingsoLayer = new VectorLayer({
-                    source: this.visingsoData,
-                    style: this.stylefunction
-                });
+                this.visingsoLayer.setSource(this.visingsoData);
+                this.visingsoLayer.setStyle(this.stylefunction);
+                this.map.addLayer(this.mapDefaults.bingTileLayer);
                 this.map.addLayer(this.mapDefaults.osmTileLayer);
-                this.map.addLayer(visingsoLayer);
+                this.map.addLayer(this.mapDefaults.mapboxTileLayer);
+                this.currentBaseMap = { value: 'osmTileLayer', viewValue: 'Gata', opacity: 1 };
+                this.map.addLayer(this.visingsoLayer);
                 this.map.setTarget('map');
                 this.addSelectInteraction();
             });
-
     }
 }
