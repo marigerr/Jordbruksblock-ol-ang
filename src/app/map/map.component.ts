@@ -116,7 +116,7 @@ export class MapComponent implements AfterViewInit {
                 this.selectedFeature = evt.features.getArray()[0];
             });
         } else {
-            // remove modify interaction - need better solution
+            // remove modify interaction
             this.map.getInteractions().pop();
             // remove selected feature highlighing
             this.selectInteraction.getFeatures().getArray().pop();
@@ -147,6 +147,20 @@ export class MapComponent implements AfterViewInit {
         })
         this.mapDefaults[selectedTileLayer].setVisible(true);
         tempArray.forEach((el) => this.mapDefaults[el].setVisible(false));
+    }
+
+    reloadData(bool) {
+        // remove modify interaction from array
+        this.map.getInteractions().pop();
+        this.jordbruksblockService.getBlocks()
+            .subscribe((data) => {
+                this.visingsoData.clear()
+                this.geojsonData.features = data;
+                this.visingsoData.addFeatures(this.mapDefaults.geojsonFormat.readFeatures(this.geojsonData));
+                this.visingsoLayer.setSource(this.visingsoData);
+                this.visingsoLayer.setStyle(this.stylefunction);
+                this.addSelectInteraction();
+            });
     }
 
     ngAfterViewInit() {

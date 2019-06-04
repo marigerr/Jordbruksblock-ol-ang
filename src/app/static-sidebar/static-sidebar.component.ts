@@ -18,6 +18,8 @@ export class StaticSidebarComponent implements OnChanges {
   blockidChange: EventEmitter<Jordbruksblock> = new EventEmitter();
   @Output()
   editFeature: EventEmitter<boolean> = new EventEmitter();
+  @Output()
+  reloadData: EventEmitter<boolean> = new EventEmitter();
 
   blockIdIsReadOnly = false;
   inputsReadOnly = true;
@@ -74,13 +76,13 @@ export class StaticSidebarComponent implements OnChanges {
 
   save() {
     this.jordbruksblockService.saveBlock(this.selectedBlock).subscribe((data: any) => {
-      this.snackBar.open('Block Saved', 'Close', {
-        duration: 2000,
+      this.snackBar.open('Block Sparade', 'Stäng', {
+        duration: 3000,
       });
       this.blockIdIsReadOnly = true;
       this.inputsReadOnly = true;
       this.notEditing = true;
-      this.editFeature.emit(false);
+      this.reloadData.emit(true);
     });
   }
 

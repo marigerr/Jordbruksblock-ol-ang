@@ -3,6 +3,7 @@
     <app-static-sidebar 
         [selectedBlock]='selectedBlock' 
         (blockidChange)='displaySelected($event)'
+        (reloadData)='reloadData($event)'
         (editFeature)='addEditInteraction($event)'></app-static-sidebar>
 </div>
 <app-controls 
