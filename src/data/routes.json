@@ -1,3 +1,0 @@
-{
-    "/features/:properties.BLOCKID": "/features?properties.BLOCKID=:properties.BLOCKID"
-}
