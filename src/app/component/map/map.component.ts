@@ -13,6 +13,7 @@ import { getCenter } from 'ol/extent';
 import { Feature, MapBrowserEvent, Collection } from 'ol';
 import Modify from 'ol/interaction/Modify';
 import { BaseMapControl } from './map.defaults';
+import { Fill, Style } from 'ol/style';
 
 @Component({
     selector: 'app-map',
@@ -28,10 +29,11 @@ export class MapComponent implements AfterViewInit {
     mapDefaults = new MapDefaults();
     baseMapControls = this.mapDefaults.baseMapControls;
     currentBaseMap: BaseMapControl = { value: 'osmTileLayer', viewValue: 'Gata', opacity: 1 };
-    blockOpacity = .4;
+    blockOpacity = 1;
     selectedBlock: Jordbruksblock = makeEmptyBlock();
     selectedFeature: Feature;
     featureCollection = new Collection([]);
+    fieldTypes: any;
 
     selectInteraction = new Select(
         { style: this.mapDefaults.selectedStyle }
@@ -53,10 +55,8 @@ export class MapComponent implements AfterViewInit {
     });
 
     stylefunction = (feature: any) => {
-        if (feature.get('AGOSLAG') === undefined) {
-            return this.mapDefaults.annatStyle;
-        }
-        return feature.get('AGOSLAG').toUpperCase() === 'AKER' ? this.mapDefaults.farmStyle : this.mapDefaults.annatStyle;
+        const featureAgoslag = feature.get('AGOSLAG').toUpperCase();
+        return this.fieldTypes.filter(obj => obj.name === featureAgoslag)[0].style;
     }
 
     displaySelected(block: Jordbruksblock) {
@@ -153,6 +153,32 @@ export class MapComponent implements AfterViewInit {
             });
     }
 
+    getAgoslag(data) {
+        const fieldTypesArr = [...new Set(data.map(x => x.properties.AGOSLAG))];
+        this.fieldTypes = fieldTypesArr.map((x) => {
+            const color = this.getColor(x);
+            return { name: x, color, style: new Style({ fill: new Fill({ color }), stroke: this.mapDefaults.whiteStroke}) };
+          });
+        console.log(this.fieldTypes);
+    }
+
+    getColor(fieldType) {
+        switch (fieldType) {
+          case 'AKER':
+            return 'hsl(329, 82%, 63%)';
+          case 'AKER_PERMGRAS':
+            return 'hsla(295, 76%, 22%)';
+          case 'AKER_PERMGROD':
+            return 'hsla(295, 76%, 41%)';
+          case 'BETE':
+            return 'yellow';
+          case 'OKÄNT':
+            return 'grey';
+          default:
+            return 'grey';
+        }
+      }
+
     ngAfterViewInit() {
         this.jordbruksblockService.getBlocks()
             .subscribe((data) => {
@@ -170,6 +196,7 @@ export class MapComponent implements AfterViewInit {
                     this.dataAndTilesLoaded = true;
                 });
                 this.addSelectInteraction();
+                this.getAgoslag(data);
             });
     }
 }

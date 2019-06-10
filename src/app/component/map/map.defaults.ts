@@ -69,24 +69,6 @@ export class MapDefaults {
         color: 'rgb(63, 81, 181, .6)'
     });
 
-    pinkFill = new Fill({
-        color: 'rgba(238, 82, 163)'
-    });
-
-    yellowFill = new Fill({
-        color: 'rgba(236, 240, 24)'
-    });
-
-    farmStyle = new Style({
-        fill: this.pinkFill,
-        stroke: this.whiteStroke
-    });
-
-    annatStyle = new Style({
-        fill: this.yellowFill,
-        stroke: this.whiteStroke
-    });
-
     selectedStyle = new Style({
         fill: this.purpleFill,
         stroke: this.blueStroke

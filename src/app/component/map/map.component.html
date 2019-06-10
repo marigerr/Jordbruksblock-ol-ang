@@ -7,11 +7,12 @@
         (blockidChange)='displaySelected($event)'
         (reloadData)='reloadData($event)'
         (editFeature)='addEditInteraction($event)'></app-static-sidebar>
+    <app-controls
+        (updateBasemapOpacity)='updateBasemapOpacity($event)'
+        (updateBlockOpacity)='updateBlockOpacity($event)'
+        (changeBaseMap)='changeBaseMap($event)'
+        [fieldTypes]='fieldTypes'
+        [baseMapControls]= 'baseMapControls'
+        [currentBaseMap]= 'currentBaseMap'
+        [blockOpacity]= 'blockOpacity'></app-controls>
 </div>
-<app-controls
-    (updateBasemapOpacity)='updateBasemapOpacity($event)'
-    (updateBlockOpacity)='updateBlockOpacity($event)'
-    (changeBaseMap)='changeBaseMap($event)'
-    [baseMapControls]= 'baseMapControls'
-    [currentBaseMap]= 'currentBaseMap'
-    [blockOpacity]= 'blockOpacity'></app-controls>

@@ -16,9 +16,6 @@
   background: rgb(255, 255, 255, .75);
   border-radius: .5rem;
   padding: 1rem .5rem 0rem .5rem;
-  /* padding-top: 1rem; */
-  /* padding-top: 1rem; */
-  /* padding-bottom: 0rem; */
 }
 
 mat-slider {
@@ -29,4 +26,27 @@ mat-slider {
 div.opacitySliders > p {
   margin-top: 0rem;
   margin-bottom: 0rem;
+}
+
+.mapLegend {
+  position: absolute;
+  left: 55%;
+  top: 73%;
+  background: rgb(255, 255, 255, .75);
+  border-radius: .5rem;
+  padding: .5rem;
+}
+
+.mapLegend i {
+  width: 30px;
+  height: 18px;
+  float: left;
+  margin-right: 8px;
+  opacity: 0.7;
+}
+
+.mapLegend ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }

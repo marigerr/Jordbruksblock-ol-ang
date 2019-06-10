@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Output, EventEmitter, Input, HostListener } from '@angular/core';
 import { BaseMapControl } from '../map/map.defaults';
 
 @Component({
@@ -6,9 +6,7 @@ import { BaseMapControl } from '../map/map.defaults';
   templateUrl: './controls.component.html',
   styleUrls: ['./controls.component.css']
 })
-export class ControlsComponent implements OnInit {
-
-  constructor() { }
+export class ControlsComponent {
 
   @Input()
   currentBaseMap: BaseMapControl;
@@ -16,6 +14,8 @@ export class ControlsComponent implements OnInit {
   baseMapControls: BaseMapControl[];
   @Input()
   blockOpacity: number;
+  @Input()
+  fieldTypes: any;;
 
   @Output()
   updateBasemapOpacity: EventEmitter<BaseMapControl> = new EventEmitter();
@@ -24,7 +24,18 @@ export class ControlsComponent implements OnInit {
   @Output()
   changeBaseMap: EventEmitter<string> = new EventEmitter();
 
-  ngOnInit() {
+  screenHeight: any;
+  screenWidth: any;
+  legendContent: string;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event?) {
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+  }
+
+  constructor() {
+    this.onResize();
   }
 
   baseMapOpacityChange() {
@@ -38,5 +49,4 @@ export class ControlsComponent implements OnInit {
   selChange() {
     this.changeBaseMap.emit(this.currentBaseMap.value);
   }
-
 }
