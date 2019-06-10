@@ -134,7 +134,7 @@ export class MapComponent implements AfterViewInit {
         let tempArray = [...this.mapDefaults.baseMapLayers];
         tempArray = tempArray.filter((el) => {
             return el !== selectedTileLayer;
-        })
+        });
         this.mapDefaults[selectedTileLayer].setVisible(true);
         tempArray.forEach((el) => this.mapDefaults[el].setVisible(false));
     }
@@ -144,7 +144,7 @@ export class MapComponent implements AfterViewInit {
         this.map.getInteractions().pop();
         this.jordbruksblockService.getBlocks()
             .subscribe((data) => {
-                this.visingsoData.clear()
+                this.visingsoData.clear();
                 this.geojsonData.features = data;
                 this.visingsoData.addFeatures(this.mapDefaults.geojsonFormat.readFeatures(this.geojsonData));
                 this.visingsoLayer.setSource(this.visingsoData);
@@ -159,7 +159,6 @@ export class MapComponent implements AfterViewInit {
             const color = this.getColor(x);
             return { name: x, color, style: new Style({ fill: new Fill({ color }), stroke: this.mapDefaults.whiteStroke}) };
           });
-        console.log(this.fieldTypes);
     }
 
     getColor(fieldType) {

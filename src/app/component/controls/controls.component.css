@@ -30,8 +30,6 @@ div.opacitySliders > p {
 
 .mapLegend {
   position: absolute;
-  left: 55%;
-  top: 73%;
   background: rgb(255, 255, 255, .75);
   border-radius: .5rem;
   padding: .5rem;

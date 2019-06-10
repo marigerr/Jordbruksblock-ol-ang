@@ -1,4 +1,6 @@
-import { Component, Output, EventEmitter, Input, HostListener } from '@angular/core';
+import {
+    Component, Output, EventEmitter, Input, HostListener
+  } from '@angular/core';
 import { BaseMapControl } from '../map/map.defaults';
 
 @Component({
@@ -15,7 +17,7 @@ export class ControlsComponent {
   @Input()
   blockOpacity: number;
   @Input()
-  fieldTypes: any;;
+  fieldTypes: any;
 
   @Output()
   updateBasemapOpacity: EventEmitter<BaseMapControl> = new EventEmitter();
@@ -27,11 +29,15 @@ export class ControlsComponent {
   screenHeight: any;
   screenWidth: any;
   legendContent: string;
+  legendLeftPos: number;
+  legendTopPos: number;
 
   @HostListener('window:resize', ['$event'])
   onResize(event?) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
+    this.legendLeftPos = .75 * this.screenWidth - 220;
+    this.legendTopPos = this.screenHeight - 190;
   }
 
   constructor() {

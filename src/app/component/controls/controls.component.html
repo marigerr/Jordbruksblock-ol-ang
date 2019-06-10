@@ -17,7 +17,7 @@
     <mat-slider #blockSlider [(value)]="blockOpacity" [(ngModel)]="blockOpacity" (change)=blockOpChange() min="0"
         max="1" step="0.1"></mat-slider>
 </div>
-<div class="mapLegend">
+<div [style.left.px]="legendLeftPos" [style.top.px]="legendTopPos" class="mapLegend">
     <p>Agoslag</p>
     <ul>
         <li *ngFor="let fieldType of fieldTypes">
